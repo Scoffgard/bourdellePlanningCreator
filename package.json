@@ -1,7 +1,7 @@
 {
   "name": "bourdelleplanningcreator",
   "version": "1.0.0",
-  "description": "A simple planning creator for the high school 'Lycée Antoine Bourdelle'",
+  "description": "Un simple créateur de planning personnalisé pour le lycée Antoine Bourdelle",
   "main": "app.js",
   "dependencies": {
     "jimp": "^0.16.1"
