@@ -1,7 +1,7 @@
 {
   "name": "bourdelleplanningcreator",
   "version": "1.0.0",
-  "description": "Un simple créateur de planning personnalisé pour le lycée Antoine Bourdelle",
+  "description": "Un simple créateur de planning personnalisé pour le lycée Bourdelle",
   "main": "app.js",
   "dependencies": {
     "jimp": "^0.16.1"
@@ -10,5 +10,5 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": ""
+  "author": "Scoffgard"
 }
