@@ -1,0 +1,14 @@
+{
+  "name": "bourdelleplanningcreator",
+  "version": "1.0.0",
+  "description": "A simple planning creator for the high school 'Lycée Antoine Bourdelle'",
+  "main": "app.js",
+  "dependencies": {
+    "jimp": "^0.16.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": ""
+}
