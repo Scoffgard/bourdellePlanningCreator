@@ -5,8 +5,6 @@ const Jimp = require('jimp');
 
 // Variables pour la création des formes et textes
 
-const colorDict = ["7878dc", "84bdd0", "78dc78", "dc7878", "dcaa78", "ddf7f7"]; // , "f2f2f2"
-
 let caseLeft = 80;
 let caseTop = 92;
 
@@ -17,22 +15,10 @@ const weekDays = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"];
 
 const imageOutput = './output/image.png'
 
-const hoursInfos = {
-    "term": [
-        {
-            name: "PHYSIQ.CHIMIE&MATHS",
-            prof: "MAGNE J.",
-            salle: "C101",
-            color : "dcdc78"
-        },
-        {
-            name: "ENS.SPEC. STI2D",
-            prof: "KOHIL A.",
-            salle: "D45",
-            color: "95bfac"
-        }
-    ]
-}
+const hoursInfos = require('./cours.json');
+
+let bold11, regular11, bold16, regular9;
+
 
 // Variables reproduisant les valeurs normalement envoyés à l'application
 
@@ -46,8 +32,8 @@ const info = {
     classe: "term"
 }
 
-let bold11, regular11, bold16, regular9;
 
+// Chargement des polices
 Jimp.loadFont('./fonts/PUBLIC_SANS_11_BLACK_BOLD.fnt').then(_1 => {
     bold11 = _1;
     Jimp.loadFont('./fonts/PUBLIC_SANS_11_BLACK_REGULAR.fnt').then(_2 => {
@@ -57,62 +43,90 @@ Jimp.loadFont('./fonts/PUBLIC_SANS_11_BLACK_BOLD.fnt').then(_1 => {
             Jimp.loadFont('./fonts/PUBLIC_SANS_9_BLACK_REGULAR.fnt').then(_4 => {
                 regular9 = _4;
 
-                // Lecture de l'image et lancement des fonctions nécessités
+                // Lecture de l'image et lancement des fonctions nécessités pour l'édition
                 Jimp.read('./toedit.png', function (err, image) {
                     if (err) throw err;
 
-                    // Lancement de l'édition
+
+                    // Ecriture du titre et du nom des jours de la semaine
                     writeTitle(image, `${info.name} - du ${info.dStart} au ${info.dEnd} ${info.monthStr} ${info.year}`);
                     drawWeekDays(image);
 
-                    for (let y = 0; y <= 4; y++) {
+
+                    // Création des heures de cours
+                    for (let y = 0; y <= 4; y++) { // Boucle executé pour chaque jours
+
+                        // Définition de nombre d'heures maximum par jours
                         let maxHours = 9;
                         if (y == 2) {
                             maxHours = 3;
                         }
+
+                        // Variable permettant de sauvegarder l'heure précedente
                         let lastHourPlacedID = null;
                         let sameHoursNumber = 1;
 
-                        for(let i = 0; i <= maxHours; i++) {
+                        for(let i = 0; i <= maxHours; i++) { // Boucle executé pour chaque heures du jour
+
+                            // Renvoie si l'heure actuelle est celle de midi
                             if (i == 4) {
                                 lastHourPlacedID = null;
                                 sameHoursNumber = 1;
                                 continue;
                             }
+
+                            // Genération d'un nombre aléatoire
                             let random = Math.floor(Math.random() * Math.floor(hoursInfos[info.classe].length));
+
+                            // Regénération si le cours a était généré plus de 3 fois de suite
                             while (sameHoursNumber == 3 && random == lastHourPlacedID) {
                                 random = Math.floor(Math.random() * Math.floor(hoursInfos[info.classe].length));
                             }
-                            if(lastHourPlacedID == random) {
-                                drawBackGround(image, y, i-sameHoursNumber, 1+sameHoursNumber, hoursInfos[info.classe][random]);
+
+                            // Regénération si le cours n'a plus de créneaux disponibles
+                            while (hoursInfos[info.classe][random].timeMax == 0) {
+                                random = Math.floor(Math.random() * Math.floor(hoursInfos[info.classe].length));
+                            }
+
+                            // Regénération si c'est une heure de vide à 11h00
+                            while (hoursInfos[info.classe][random].name == "" && i == 3) {
+                                random = Math.floor(Math.random() * Math.floor(hoursInfos[info.classe].length));
+                            }
+
+                            // Regénération si c'est une heure de vide à 13h00
+                            while (hoursInfos[info.classe][random].name == "" && i == 5) {
+                                random = Math.floor(Math.random() * Math.floor(hoursInfos[info.classe].length));
+                            }
+
+                            // Retrait d'une heure au compteur max de la matière
+                            hoursInfos[info.classe][random].timeMax--;
+
+                            // Dessinage de l'heure selon le nombre d'heure à la suite
+                            if(lastHourPlacedID == random) { // Si 2 ou 3 heure de suite
+                                drawCours(image, y, i-sameHoursNumber, 1+sameHoursNumber, hoursInfos[info.classe][random]);
                                 sameHoursNumber++;
-                            } else {
-                                drawBackGround(image, y, i, 1, hoursInfos[info.classe][random]);
+                            } else { // Si une seul heure
+                                drawCours(image, y, i, 1, hoursInfos[info.classe][random]);
                                 sameHoursNumber = 1;
                             }
+
+                            // Sauvegarde de l'heure actuelle
                             lastHourPlacedID = random;
                         }
                     }
-
 
                     // Sauvegarde finale de l'image    
                     image.write(imageOutput, (err) => {
                         if (err) throw err;
                     });
-                    
                 });
-    
             });
         });
     });
 });
 
-
-
-
-
-// Fonction permetant de dessiner l'arrière plan d'une période de cours
-function drawBackGround(image, day, h, nb, course) {
+// Fonction permettant de dessiner l'arrière plan d'une période de cours
+function drawCours(image, day, h, nb, course) {
 
     let multipleCorrect = 2;
     let localCaseTop = caseTop;
@@ -133,19 +147,26 @@ function drawBackGround(image, day, h, nb, course) {
         multipleCorrect+= 0.5;
     }
 
-    // Choix au hasard d'une couleur parmis la liste a disposition
-    let color = course.color;
-
-    // Remplissage pixels après pixels du rectangle de la taille préscisée par les paramètres de la fonction
+    // Remplissage pixels après pixels du rectangle de la taille précisée par les paramètres de la fonction
     for (let x = 0; x <= 208; x++) {
+        // Creation du fond du cours
         for (let y = 0; y <= 53*nb+nb+multipleCorrect*2; y++) {
-            image.setPixelColor(parseInt(`0x${color}FF`, 16), caseLeft+x+(day*210), localCaseTop+y+(h*56));
+            image.setPixelColor(parseInt(`0x${course.color}FF`, 16), caseLeft+x+(day*210), localCaseTop+y+(h*56));
+        }
+
+        // Tracage de traits noirs au dessus et en dessous du cours
+        if (localCaseTop+53*nb+nb+multipleCorrect*2+(h*56)+1 != 427) {
+            image.setPixelColor(parseInt(`0x000000FF`, 16), caseLeft+x+(day*210), localCaseTop+53*nb+nb+multipleCorrect*2+(h*56)+1);
+        }
+        if (localCaseTop+56*h-1 != 428) {
+            image.setPixelColor(parseInt(`0x000000FF`, 16), caseLeft+x+(day*210), localCaseTop+56*h-1);
         }
     }
 
     
     // Recupération de la taille du texte
     let textSize = Jimp.measureText(bold11, course.name);
+    
     // Ecriture du texte au centre de l'image
     if (nb == 1) {
         image.print(bold11, caseLeft+(208/2)-textSize/2+(day*210), caseTop+5+(h*56), course.name);
@@ -153,12 +174,11 @@ function drawBackGround(image, day, h, nb, course) {
         image.print(bold11, caseLeft+(208/2)-textSize/2+(day*210), caseTop+5+((h+((nb-1)/2))*56), course.name);
     }
     
-
-    
-    if (nb == 1) {
+    // Impression du texte concernant le prof et la salle selon le type de cours
+    if (nb == 1) { // Pour 1h
         image.print(regular11, caseLeft+(208/2)-Jimp.measureText(regular11, course.prof)/2+(day*210), caseTop+21+(h*56), course.prof);
         image.print(regular11, caseLeft+(208/2)-Jimp.measureText(regular11, course.salle)/2+(day*210), caseTop+37+(h*56), course.salle);
-    } else {
+    } else { // Pour 2h et +
         image.print(regular11, caseLeft+(208/2)-Jimp.measureText(regular11, course.prof)/2+(day*210), caseTop+21+((h+((nb-1)/2))*56), course.prof);
         image.print(regular11, caseLeft+(208/2)-Jimp.measureText(regular11, course.salle)/2+(day*210), caseTop+37+((h+((nb-1)/2))*56), course.salle);
     }

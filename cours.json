@@ -1,0 +1,88 @@
+{
+    "term": [
+        {
+            "name": "ANGLAIS LV1",
+            "prof": "BOURDON J.",
+            "salle": "C214 STMG",
+            "color": "dcdc78",
+            "timeMax": "3"
+        },
+        {
+            "name": "PHYSIQ.CHIMIE&MATHS",
+            "prof": "MAGNE J.",
+            "salle": "C101",
+            "color": "f2f2f2",
+            "timeMax": "5"
+        },
+        {
+            "name": "ENS.SPEC. STI2D",
+            "prof": "KOHIL A.",
+            "salle": "D45",
+            "color": "95bfac",
+            "timeMax": "8"
+        },
+        {
+            "name": "INGENIER.INNOV&DEV.DURAB.",
+            "prof": "TAUPIAC P.",
+            "salle": "D26 STI2D",
+            "color": "84bdd0",
+            "timeMax": "4"
+        },
+        {
+            "name": "ESPAGNOL LV2",
+            "prof": "PIERRET A.",
+            "salle": "C208 STMG",
+            "color": "dcaa78",
+            "timeMax": "3"
+        },
+        {
+            "name": "MATHEMATIQUES",
+            "prof": "GUILLAS-BIDAULT N.",
+            "salle": "B201",
+            "color": "dc7878",
+            "timeMax": "5"
+        },
+        {
+            "name": "HISTOIRE-GÉOGRAPHIE",
+            "prof": "BOUCHER C.",
+            "salle": "C211 STMG",
+            "color": "78dc78",
+            "timeMax": "3"
+        },
+        {
+            "name": "PHILOSOPHIE",
+            "prof": "RAMOS COSTA A.",
+            "salle": "N102",
+            "color": "ddf7f7",
+            "timeMax": "2"
+        },
+        {
+            "name": "EPS",
+            "prof": "DESCAZEAUX G.",
+            "salle": "GROUPE EPS LGT",
+            "color": "dcaa78",
+            "timeMax": "3"
+        },
+        {
+            "name": "ACCOMP.CHOIX ORIENT.",
+            "prof": "TAUPIAC P.",
+            "salle": "D100",
+            "color": "f2f2f2",
+            "timeMax": "1"
+        },
+        {
+            "name": "ENS. MORAL & CIVIQUE",
+            "prof": "RAMOS COSTA A.",
+            "salle": "N105",
+            "color": "78dc78",
+            "timeMax": "1"
+        },
+        {
+            "name": "",
+            "prof": "",
+            "salle": "",
+            "color": "ffffff",
+            "timeMax": "10"
+        }
+    ]
+}
