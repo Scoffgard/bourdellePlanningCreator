@@ -68,38 +68,19 @@ Jimp.loadFont('./fonts/PUBLIC_SANS_11_BLACK_BOLD.fnt').then(_1 => {
 
                         for(let i = 0; i <= maxHours; i++) { // Boucle executé pour chaque heures du jour
 
-                            // Renvoie si l'heure actuelle est celle de midi
+                            // Renvoi si l'heure actuelle est celle de midi
                             if (i == 4) {
                                 lastHourPlacedID = null;
                                 sameHoursNumber = 1;
                                 continue;
                             }
 
-                            // Genération d'un nombre aléatoire
-                            let random = Math.floor(Math.random() * Math.floor(hoursInfos[info.classe].length));
-
-                            // Regénération si le cours a était généré plus de 3 fois de suite
-                            while (sameHoursNumber == 3 && random == lastHourPlacedID) {
-                                random = Math.floor(Math.random() * Math.floor(hoursInfos[info.classe].length));
-                            }
-
-                            // Regénération si le cours n'a plus de créneaux disponibles
-                            while (hoursInfos[info.classe][random].timeMax == 0) {
-                                random = Math.floor(Math.random() * Math.floor(hoursInfos[info.classe].length));
-                            }
-
-                            // Regénération si c'est une heure de vide à 11h00
-                            while (hoursInfos[info.classe][random].name == "" && i == 3) {
-                                random = Math.floor(Math.random() * Math.floor(hoursInfos[info.classe].length));
-                            }
-
-                            // Regénération si c'est une heure de vide à 13h00
-                            while (hoursInfos[info.classe][random].name == "" && i == 5) {
-                                random = Math.floor(Math.random() * Math.floor(hoursInfos[info.classe].length));
-                            }
+                            // Choix de la matière qui va être dessinée
+                            const allowedNumbers = getAllowedNumbers(sameHoursNumber, lastHourPlacedID, hoursInfos[info.classe], i);
+                            const random = generateRandom(hoursInfos[info.classe].length, allowedNumbers);
 
                             // Retrait d'une heure au compteur max de la matière
-                            hoursInfos[info.classe][random].timeMax--;
+                            hoursInfos[info.classe][parseInt(random)].timeMax--;
 
                             // Dessinage de l'heure selon le nombre d'heure à la suite
                             if(lastHourPlacedID == random) { // Si 2 ou 3 heure de suite
@@ -166,7 +147,7 @@ function drawCours(image, day, h, nb, course) {
     
     // Recupération de la taille du texte
     let textSize = Jimp.measureText(bold11, course.name);
-    
+
     // Ecriture du texte au centre de l'image
     if (nb == 1) {
         image.print(bold11, caseLeft+(208/2)-textSize/2+(day*210), caseTop+5+(h*56), course.name);
@@ -182,9 +163,6 @@ function drawCours(image, day, h, nb, course) {
         image.print(regular11, caseLeft+(208/2)-Jimp.measureText(regular11, course.prof)/2+(day*210), caseTop+21+((h+((nb-1)/2))*56), course.prof);
         image.print(regular11, caseLeft+(208/2)-Jimp.measureText(regular11, course.salle)/2+(day*210), caseTop+37+((h+((nb-1)/2))*56), course.salle);
     }
-    
-
-
 }
 
 // Ecriture du titre du l'emploi du temps
@@ -205,4 +183,41 @@ function drawWeekDays(image) {
         // Ecriture du texte selon son alignement prédéfini
         image.print(regular9, weekDaysLeft[i]+2, weekDaysTop-2, `${weekDays[i]} ${_0Needed}${info.dStart+i}/${info.monthDec}`);
     }   
+}
+
+
+// Obtention des matières choisisables
+function getAllowedNumbers(sameHoursNumber, lastHourPlacedID, hourInfos, i) {
+
+    // Filtrage de toutes le matières qui sont encore disponible à la disposition
+    const allowedNumbers = hourInfos.filter((info) => info.timeMax =! 0) || [];
+
+    // Retrait des matières qui ont déjà était répétés plus de 3 fois.
+    if(sameHoursNumber === 4) {
+        allowedNumbers.splice(lastHourPlacedID, 1);
+    }
+
+    // Retrait des vides si il est 11h ou 13h
+    if (i == 3 || i == 5) {
+        let index = allowedNumbers.indexOf(hourInfos.find(cours => cours.name == ""));
+        allowedNumbers.splice(index, 1);
+    }
+
+    // Renvoi de la liste contenant les seulement les options choisisables
+    return allowedNumbers;
+}
+
+
+// Choix de la matière au hasard selon celle disponibles
+function generateRandom(max, allowed = []) {
+    // Creation d'un chiffre aléatoire
+    let generatedNumber = Math.floor(Math.random() * max); 
+
+    // Répétiton de la creation tant que le chiffre ne correspond pas aux attentes
+    while (allowed[generatedNumber] == undefined) {
+        generatedNumber = Math.floor(Math.random() * max);
+    }
+
+    // Renvoi du chiffre
+    return generatedNumber;
 }
