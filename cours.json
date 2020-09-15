@@ -1,88 +1,100 @@
 {
     "term": [
         {
+            "id": "EN",
             "name": "ANGLAIS LV1",
             "prof": "BOURDON J.",
-            "salle": "C214 STMG",
+            "room": "C214 STMG",
             "color": "dcdc78",
-            "timeMax": "3"
+            "timeMax": 3
         },
         {
+            "id": "PC",
             "name": "PHYSIQ.CHIMIE&MATHS",
             "prof": "MAGNE J.",
-            "salle": "C101",
+            "room": "C101",
             "color": "f2f2f2",
-            "timeMax": "5"
+            "timeMax": 5
         },
         {
+            "id": "SPE",
             "name": "ENS.SPEC. STI2D",
             "prof": "KOHIL A.",
-            "salle": "D45",
+            "room": "D45",
             "color": "95bfac",
-            "timeMax": "8"
+            "timeMax": 8
         },
         {
+            "id": "ING",
             "name": "INGENIER.INNOV&DEV.DURAB.",
             "prof": "TAUPIAC P.",
-            "salle": "D26 STI2D",
+            "room": "D26 STI2D",
             "color": "84bdd0",
-            "timeMax": "4"
+            "timeMax": 4
         },
         {
+            "id": "SP",
             "name": "ESPAGNOL LV2",
             "prof": "PIERRET A.",
-            "salle": "C208 STMG",
+            "room": "C208 STMG",
             "color": "dcaa78",
-            "timeMax": "3"
+            "timeMax": 3
         },
         {
+            "id": "MT",
             "name": "MATHEMATIQUES",
             "prof": "GUILLAS-BIDAULT N.",
-            "salle": "B201",
+            "room": "B201",
             "color": "dc7878",
-            "timeMax": "5"
+            "timeMax": 5
         },
         {
+            "id": "HG",
             "name": "HISTOIRE-GÉOGRAPHIE",
             "prof": "BOUCHER C.",
-            "salle": "C211 STMG",
+            "room": "C211 STMG",
             "color": "78dc78",
-            "timeMax": "3"
+            "timeMax": 3
         },
         {
+            "id": "PH",
             "name": "PHILOSOPHIE",
             "prof": "RAMOS COSTA A.",
-            "salle": "N102",
+            "room": "N102",
             "color": "ddf7f7",
-            "timeMax": "2"
+            "timeMax": 2
         },
         {
+            "id": "EPS",
             "name": "EPS",
             "prof": "DESCAZEAUX G.",
-            "salle": "GROUPE EPS LGT",
+            "room": "GROUPE EPS LGT",
             "color": "dcaa78",
-            "timeMax": "3"
+            "timeMax": 3
         },
         {
+            "id": "AP",
             "name": "ACCOMP.CHOIX ORIENT.",
             "prof": "TAUPIAC P.",
-            "salle": "D100",
+            "room": "D100",
             "color": "f2f2f2",
-            "timeMax": "1"
+            "timeMax": 1
         },
         {
+            "id": "MC",
             "name": "ENS. MORAL & CIVIQUE",
             "prof": "RAMOS COSTA A.",
-            "salle": "N105",
+            "room": "N105",
             "color": "78dc78",
-            "timeMax": "1"
+            "timeMax": 0
         },
         {
+            "id": "PERM",
             "name": "",
             "prof": "",
-            "salle": "",
+            "room": "",
             "color": "ffffff",
-            "timeMax": "10"
+            "timeMax": 10
         }
     ]
 }
