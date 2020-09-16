@@ -1,7 +1,10 @@
 const Jimp = require('jimp');
+const fetch = require('node-fetch');
 const Drawer = require('./src/Drawer');
+const Infos = require('./src/Infos');
 
 const student = require('./config/student.json');
+const { cropQuiet } = require('jimp');
 let courses = require('./cours.json').term;
 
 const FreeId = "PERM";
@@ -69,9 +72,15 @@ function getRandomCourse(courses, lastCourses, hour) {
     }
     const image = await Jimp.read(inputFile);
     const drawer = new Drawer(image, fonts, Jimp);
+    const infos = new Infos(fetch);
     drawer.setTitle(title);
     for(let day of days) {
         drawer.setDayTitle(day, student);
+    }
+
+    for (let course of courses) {
+        if (course.id == "PERM") continue;
+        course.prof = await infos.getNewProfName('male');
     }
 
     // dinnertime is pause, no course
