@@ -4,6 +4,9 @@
   "description": "Un simple créateur de planning personnalisé pour le lycée Bourdelle",
   "main": "app.js",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
     "jimp": "^0.16.1",
     "node-fetch": "^2.6.1"
   },

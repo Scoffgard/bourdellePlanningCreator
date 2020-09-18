@@ -24,18 +24,34 @@ class Drawer {
         this.fonts = fonts;
     }
 
+    /**
+     * Set the title of the image
+     * @param {string} title The title of the image
+     */
     setTitle(title) {
         const bold16Size = this.Jimp.measureText(this.fonts.BOLD16, title);
-        // Print on center of the image
         this.image.print(this.fonts.BOLD16, this.image.bitmap.width / 2 - bold16Size / 2, VALUES.title.top, title);
     }
 
-    setDayTitle(day, student) {
-        const dayTwoDigit = ('0' + (student.dStart + day.index)).slice(-2);
-        const date = `${ day.label } ${ dayTwoDigit }/${ student.monthDec }`;
+    /**
+     * Set all the days titles
+     * @param {number} day Day concerned [0-4]
+     * @param {Object} info Object containing the informations given by the user
+     */
+    setDayTitle(day, info) {
+        // add a 0 if the date has only one digit
+        const dayTwoDigit = ('0' + (info.dStart + day.index)).slice(-2);
+        const date = `${ day.label } ${ dayTwoDigit }/${ info.monthDec }`;
         this.image.print(this.fonts.REGULAR9, day.left, day.top, date);
     }
 
+    /**
+     * Draw a course on the image
+     * @param {number} day The day concerned [0-4]
+     * @param {number} hour The hour concerned [0-9]
+     * @param {Object} course The course object containing course's infos
+     * @param {number} nbConsecutiveCourse Number of consecutives hours
+     */
     setCourse(day, hour, course, nbConsecutiveCourse) {
         let localCaseTop = VALUES.marge.top;
         if(hour > 5) localCaseTop++;
@@ -87,9 +103,15 @@ class Drawer {
         this.image.print(this.fonts.REGULAR11, getStartTextLeft(roomTextSize), boxMiddle + 37, course.room);
     }
 
-    export(outputFile) {
+    /**
+     * Export the image under a file and send it to user
+     * @param {string} outputFile Path to file
+     * @param {*} res Express's reponse param needed for send back to use the image
+     */
+    export(outputFile, res) {
         this.image.write(outputFile, () => {
-            console.log(`Image exporté dans le fichier : ${outputFile}`);
+            res.sendFile(outputFile);
+            console.log(`New image created with name : ${outputFile}`);
         });
     }
 }
