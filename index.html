@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+    <head>
+        <title>Planning au hasard</title>
+        <link rel="stylesheet" href="styles.css" />
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <header>
+            <h2>Générateur d'emploi du temps pour Bourdelle</h2>
+            <a href="https://github.com/Scoffgard/bourdellePlanningCreator" target="_blank">GitHub <img src="assets/GitHub-Mark-32px.png" /></a>
+        </header>
+        <div id="banner" class="banner"></div>
+        <div id="content" class="content">
+            <h3><u>Formulaire :</u></h3>
+            <form action="http://localhost:8080" method="post" id="form">
+                <label>Nom :</label><br />
+                <input type="text" name="lName" required/><br /><br />
+
+                <label>Prénom :</label><br />
+                <input type="text" name="fName" required/><br /><br />
+
+                <label>Date de début :</label><br />
+                <input type="date" style="padding: 5px;" required id="date" name="date" /><br /><br />
+
+                <label>Niveau :</label><br />
+                <select style="padding: 5px;" required name="level">
+                    <option>Terminale</option>
+                    <option>Premiere</option>
+                    <option>Seconde</option>
+                </select><br /><br />
+                
+                <input type="checkbox" !checked required/>
+                <label>J'accepte les <span style="text-decoration: underline; color: cadetblue;" onclick="showContidions()">conditions</span></label>
+                
+                <span id="conditions" hidden><br /><br />
+                    Ce projet est a été créé pour amener à des fins seulement illustratives ou décoratives. Il est interdit d'utiliser ces emplois du temps à des fins administratives. En cas de non-respect de cette contre-indication, je ne pourrais être tenu responsable d'une quelconque mauvaise utilisation de cette application.
+                </span>
+
+                <br />
+                <span id="err" style="color: crimson;"></span>
+                <br />
+
+            </form>
+
+            <button onclick="trySubmit()">Generer</button>
+        </div>
+
+        <script>
+            let span = document.getElementById("conditions");
+            let err = document.getElementById("err");
+            let form = document.getElementById("form");
+            let dateInput = document.getElementById("date");
+            function showContidions() {
+                span.hidden = !span.hidden;
+            }
+            function trySubmit() {
+                let date = new Date(dateInput.value);
+                if(date.getDay() == 1) {
+                    form.submit();
+                } else {
+                    err.innerHTML = "<br/>Le jour de départ doit être un lundi<br/>";
+                    setTimeout(() => {err.innerHTML = ""}, 5000);
+                }
+            }
+        </script>
+    </body>
+</html>
