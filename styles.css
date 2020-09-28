@@ -55,3 +55,13 @@ div.content {
 div.content form {
     margin-top: 15px;
 }
+
+
+/* Responsive Style */
+@media screen and (min-aspect-ratio: 1/1) and (min-width:200px) {
+
+    div.banner {
+        height: 30px;
+    }
+
+}
