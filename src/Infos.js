@@ -10,13 +10,16 @@ class Infos {
      * @param {Array} profs List of professors
      * @param {Array} colors List of colors
      */
-    setCoursesParameters(courses, freeCourseID, profs, colors) {
+    setCoursesParameters(courses, freeCourseID, profs, colors, classrooms) {
         for(let course of courses) {
             if(course.id == freeCourseID) continue;
             if(colors.length == 0) {colors.push('ffffff')};
             let randoms = [getRandomInt(profs.length), getRandomInt(colors.length)];
+            let classroomInfos = new generateClassroom(classrooms);
+            let classroom = `${classroomInfos.building.toString().toUpperCase()} ${classroomInfos.floor}${('0' + classroomInfos.room).slice(-2)}`;
             course.prof = profs[randoms[0]];
             course.color = colors[randoms[1]];
+            course.room = classroom;
             profs.splice(randoms[0], 1);
             colors.splice(randoms[1], 1);
         }
@@ -31,7 +34,7 @@ class Infos {
         let askedDate = new Date(info.date);
 
         const infos = {
-            "name": `${info.lName.toString().toUpperCase()} ${info.fName}`,
+            "name": `${info.lName.toString().toUpperCase()} ${info.fName.charAt(0).toUpperCase()}${info.fName.substring(1).toLowerCase()}`,
             "monthStr": months[askedDate.getMonth()],
             "monthDec": ('0' + askedDate.getMonth()).slice(-2),
             "year": askedDate.getFullYear(),
@@ -63,4 +66,11 @@ Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
     return date;
+}
+
+function generateClassroom(classrooms) {
+    let keys = Object.keys(classrooms);
+    this.building = keys[getRandomInt(keys.length)];
+    this.floor = getRandomInt(classrooms[this.building][0]);
+    this.room = getRandomInt(classrooms[this.building][1]);
 }

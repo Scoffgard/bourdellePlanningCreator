@@ -8,6 +8,7 @@ const Infos = require('./src/Infos');
 
 const profs = require('./config/profs.json');
 const colors = require('./config/colors.json');
+const config = require('./config/general.json');
 let courses = require('./cours.json').term;
 
 
@@ -59,6 +60,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/', (req, res) => {
     (async () => {
+
+        
+        courses = require('./cours.json').term;
+
        
         const fonts = {
             BOLD11: await Jimp.loadFont('./fonts/PUBLIC_SANS_11_BLACK_BOLD.fnt'),
@@ -75,7 +80,7 @@ app.post('/', (req, res) => {
 
         outputFile = path.join(outputFile, `img_${student.name.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", "-")}.png`);
 
-        courses = infos.setCoursesParameters(courses, freeCourseId, profs, colors);
+        courses = infos.setCoursesParameters(courses, freeCourseId, profs, colors, config.classrooms);
         
         const title = `${student.name} - du ${student.dStart} au ${student.dEnd} ${student.monthStr} ${student.year}`;
 
