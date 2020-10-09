@@ -16,7 +16,7 @@ class Infos {
             if(colors.length == 0) {colors.push('ffffff')};
             let randoms = [getRandomInt(profs.length), getRandomInt(colors.length)];
             let classroomInfos = new generateClassroom(classrooms);
-            let classroom = `${classroomInfos.building.toString().toUpperCase()} ${classroomInfos.floor}${('0' + classroomInfos.room).slice(-2)}`;
+            let classroom = `${classroomInfos.building.toString().toUpperCase()} ${classroomInfos.floor}${('0' + (classroomInfos.room+1)).slice(-2)}`;
             course.prof = profs[randoms[0]];
             course.color = colors[randoms[1]];
             course.room = classroom;
