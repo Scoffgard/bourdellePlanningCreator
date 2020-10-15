@@ -54,8 +54,20 @@ module.exports = Infos;
  * Send a integer between 0 and the max param
  * @param {number} max Max number for the random int
  */
-function getRandomInt(max) {
-    return Math.floor(Math.random() * Math.floor(max));
+function getRandomInt(max, banned) {
+    let random;
+    if(typeof banned == Array) {
+        do {
+            random = Math.floor(Math.random() * Math.floor(max));
+        } while (banned.indexOf(random) == undefined)
+    } else if (typeof banned == Number) {
+        do {
+            random = Math.floor(Math.random() * Math.floor(max));
+        } while (random == banned)
+    } else {
+        random = Math.floor(Math.random() * Math.floor(max));
+    }
+    return random;
 }
 
 /**
