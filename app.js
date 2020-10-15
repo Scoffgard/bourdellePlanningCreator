@@ -9,14 +9,16 @@ const Infos = require('./src/Infos');
 const profs = require('./config/profs.json');
 const colors = require('./config/colors.json');
 const config = require('./config/general.json');
-let courses = require('./cours.json').term;
+const coursesJson = require('./config/cours.json').term;
+let courses;
 
 
 const app = express();
 
 const freeCourseId = "PERM";
 const inputFile = './toedit.png';
-let outputFile = path.join(__dirname, './output/');
+const outputFolder = path.join(__dirname, './output/');
+let outputFile;
 const port = '8080';
 
 const day_top = 77;
@@ -59,12 +61,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/', (req, res) => {
+
     (async () => {
-
         
-        courses = require('./cours.json').term;
-
-       
         const fonts = {
             BOLD11: await Jimp.loadFont('./fonts/PUBLIC_SANS_11_BLACK_BOLD.fnt'),
             REGULAR11: await Jimp.loadFont('./fonts/PUBLIC_SANS_11_BLACK_REGULAR.fnt'),
@@ -78,9 +77,9 @@ app.post('/', (req, res) => {
 
         let student = infos.processStudentInfos(req.body);
 
-        outputFile = path.join(outputFile, `img_${student.name.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", "-")}.png`);
+        outputFile = path.join(outputFolder, `img_${student.name.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", "-")}-${Date.now()}.png`);
 
-        courses = infos.setCoursesParameters(courses, freeCourseId, profs, colors, config.classrooms);
+        courses = infos.setCoursesParameters(JSON.parse(coursesJson), freeCourseId, profs, colors, config.classrooms);
         
         const title = `${student.name} - du ${student.dStart} au ${student.dEnd} ${student.monthStr} ${student.year}`;
 
@@ -102,12 +101,14 @@ app.post('/', (req, res) => {
                     courses = filterCourses(courses);
                     // Get new course randomly
                     const course = getRandomCourse(courses, lastCourses, hour);
+                    while (course === undefined)
                     // Add 1 to consectuive hour if this is the case
                     consecutiveHours = lastCourses[lastCourses.length - 1] === course.id ? consecutiveHours + 1 : 0;
 
+
+                    course.timeMax--;
                     lastCourses.push(course.id);
                     lastCourses = lastCourses.slice(-maxConsecutiveHours);
-                    course.timeMax--;
 
                     // draw course
                     drawer.setCourse(day, hour, course, consecutiveHours);
@@ -117,7 +118,7 @@ app.post('/', (req, res) => {
             }
         }
 
-        return drawer.export(outputFile, res, outputFile);
+        return drawer.export(outputFile, res);
 
     })();
 });
@@ -129,15 +130,17 @@ app.listen(port, () => {
 
 
 function filterCourses(courses) {
-    return courses.filter(course => course.timeMax !== 0);
+    return courses.filter(course => course.timeMax != 0);
 }
 
 function getRandomCourse(courses, lastCourses, hour) {
+    let randomCourse;
     if (hour === 3 || hour === 5) {
-        courses = courses.filter(course => course.id !== freeCourseId);
+        courses = courses.filter(course => course.id != freeCourseId);
     }
+    console.log(courses);
     do {
         randomCourse = courses[Math.floor(Math.random() * courses.length)];
-    } while (lastCourses.filter((course) => course === randomCourse.id).length === maxConsecutiveHours);
+    } while (lastCourses.filter(course => course == randomCourse.id).length == maxConsecutiveHours);
     return randomCourse;
 }
