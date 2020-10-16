@@ -56,17 +56,19 @@ module.exports = Infos;
  */
 function getRandomInt(max, banned) {
     let random;
-    if(typeof banned == Array) {
+    if(banned && typeof banned == "object") {
         do {
             random = Math.floor(Math.random() * Math.floor(max));
-        } while (banned.indexOf(random) == undefined)
-    } else if (typeof banned == Number) {
+        } while (banned.includes(random))
+    } else if (typeof banned == "number") {
         do {
             random = Math.floor(Math.random() * Math.floor(max));
         } while (random == banned)
     } else {
         random = Math.floor(Math.random() * Math.floor(max));
     }
+
+    console.log(banned, typeof banned, random)
     return random;
 }
 
@@ -83,6 +85,6 @@ Date.prototype.addDays = function(days) {
 function generateClassroom(classrooms) {
     let keys = Object.keys(classrooms);
     this.building = keys[getRandomInt(keys.length)];
-    this.floor = getRandomInt(classrooms[this.building][0]);
-    this.room = getRandomInt(classrooms[this.building][1]);
+    this.floor = getRandomInt(classrooms[this.building][1], classrooms[this.building][0]);
+    this.room = getRandomInt(classrooms[this.building][2], classrooms[this.building][0]);
 }
