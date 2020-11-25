@@ -69,8 +69,6 @@ function getRandomInt(max, banned) {
     } else {
         random = Math.floor(Math.random() * Math.floor(max));
     }
-
-    console.log(banned, typeof banned, random)
     return random;
 }
 
