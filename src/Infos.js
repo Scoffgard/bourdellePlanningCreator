@@ -1,29 +1,31 @@
 const months = ["Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"];
 
 class Infos {
-    constructor() {}
+    constructor(courses, profs, colors, classrooms) {
+        this.courses = courses;
+        this.profs = profs;
+        this.colors = colors;
+        this.classrooms = classrooms;
+    }
 
     /**
      * Set simple parameters like color and professor name
-     * @param {Object || Array} courses An object or array containaing all the courses's objects
      * @param {string} freeCourseID Id of the free hour
-     * @param {Array} profs List of professors
-     * @param {Array} colors List of colors
      */
-    setCoursesParameters(courses, freeCourseID, profs, colors, classrooms) {
-        for(let course of courses) {
+    setCoursesParameters(freeCourseID) {
+        for(let course of this.courses) {
             if(course.id == freeCourseID) continue;
-            if(colors.length == 0) {colors.push('ffffff')};
-            let randoms = [getRandomInt(profs.length), getRandomInt(colors.length)];
-            let classroomInfos = new generateClassroom(classrooms);
+            if(this.colors.length == 0) {this.colors.push('ffffff')};
+            let randoms = [getRandomInt(this.profs.length), getRandomInt(this.colors.length)];
+            let classroomInfos = new generateClassroom(this.classrooms);
             let classroom = `${classroomInfos.building.toString().toUpperCase()} ${classroomInfos.floor}${('0' + (classroomInfos.room+1)).slice(-2)}`;
-            course.prof = profs[randoms[0]];
-            course.color = colors[randoms[1]];
+            course.prof = this.profs[randoms[0]];
+            course.color = this.colors[randoms[1]];
             course.room = classroom;
-            profs.splice(randoms[0], 1);
-            colors.splice(randoms[1], 1);
+            this.profs.splice(randoms[0], 1);
+            this.colors.splice(randoms[1], 1);
         }
-        return courses;
+        return this.courses;
     }
 
     /**

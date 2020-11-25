@@ -73,13 +73,13 @@ app.post('/', (req, res) => {
 
         const image = await Jimp.read(inputFile);
         const drawer = new Drawer(image, fonts, Jimp);
-        const infos = new Infos();
+        const infos = new Infos(coursesJson, profs, colors, config.classrooms);
 
         let student = infos.processStudentInfos(req.body);
 
         outputFile = path.join(outputFolder, `img_${student.name.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", "-")}-${Date.now()}.png`);
 
-        courses = infos.setCoursesParameters(JSON.parse(coursesJson), freeCourseId, profs, colors, config.classrooms);
+        courses = infos.setCoursesParameters(freeCourseId);
         
         const title = `${student.name} - du ${student.dStart} au ${student.dEnd} ${student.monthStr} ${student.year}`;
 
