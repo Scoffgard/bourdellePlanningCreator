@@ -5,11 +5,6 @@ const path = require('path');
 
 const Drawer = require('./src/Drawer');
 const Infos = require('./src/Infos');
-
-const profs = JSON.stringify(require('./config/profs.json'));
-const colors = JSON.stringify(require('./config/colors.json'));
-const config = JSON.stringify(require('./config/general.json'));
-const coursesJson = JSON.stringify(require('./config/cours.json').term);
 let courses;
 
 const app = express();
@@ -62,6 +57,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/', (req, res) => {
 
     (async () => {
+
+    
+        const profs = JSON.stringify(require('./config/profs.json'));
+        const colors = JSON.stringify(require('./config/colors.json'));
+        const config = JSON.stringify(require('./config/general.json'));
+        const coursesJson = JSON.stringify(require('./config/cours.json').term);
         
         const fonts = {
             BOLD11: await Jimp.loadFont('./fonts/PUBLIC_SANS_11_BLACK_BOLD.fnt'),
@@ -72,21 +73,19 @@ app.post('/', (req, res) => {
 
         const image = await Jimp.read(inputFile);
         const drawer = new Drawer(image, fonts, Jimp);
-        const infos = new Infos(coursesJson, profs, colors, config.classrooms);
+        const infos = new Infos(JSON.parse(coursesJson), JSON.parse(profs), JSON.parse(colors), JSON.parse(config).classrooms);
+
 
         let student = infos.processStudentInfos(req.body);
 
         outputFile = path.join(outputFolder, `img_${student.name.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", "-")}-${Date.now()}.png`);
 
-<<<<<<< HEAD
         courses = infos.setCoursesParameters(freeCourseId);
-=======
-        courses = infos.setCoursesParameters(JSON.parse(coursesJson), freeCourseId, JSON.parse(profs), JSON.parse(colors), JSON.parse(config).classrooms);
->>>>>>> 97440a670f4d2046f7aeecc6998908d88878c83c
         
         const title = `${student.name} - du ${student.dStart} au ${student.dEnd} ${student.monthStr} ${student.year}`;
 
         drawer.setTitle(title);
+        
         for(let day of days) {
             drawer.setDayTitle(day, student);
         }
@@ -106,7 +105,7 @@ app.post('/', (req, res) => {
                     const course = getRandomCourse(courses, lastCourses, hour);
                     while (course === undefined)
                     // Add 1 to consectuive hour if this is the case
-                    consecutiveHours = lastCourses[lastCourses.length - 1] === course.id ? consecutiveHours + 1 : 0;
+                    consecutiveHours = lastCourses[lastCourses.length - 1] == course.id ? consecutiveHours + 1 : 0;
 
 
                     course.timeMax--;
