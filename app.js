@@ -6,12 +6,11 @@ const path = require('path');
 const Drawer = require('./src/Drawer');
 const Infos = require('./src/Infos');
 
-const profs = require('./config/profs.json');
-const colors = require('./config/colors.json');
-const config = require('./config/general.json');
-const coursesJson = require('./config/cours.json').term;
+const profs = JSON.stringify(require('./config/profs.json'));
+const colors = JSON.stringify(require('./config/colors.json'));
+const config = JSON.stringify(require('./config/general.json'));
+const coursesJson = JSON.stringify(require('./config/cours.json').term);
 let courses;
-
 
 const app = express();
 
@@ -79,7 +78,11 @@ app.post('/', (req, res) => {
 
         outputFile = path.join(outputFolder, `img_${student.name.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" ", "-")}-${Date.now()}.png`);
 
+<<<<<<< HEAD
         courses = infos.setCoursesParameters(freeCourseId);
+=======
+        courses = infos.setCoursesParameters(JSON.parse(coursesJson), freeCourseId, JSON.parse(profs), JSON.parse(colors), JSON.parse(config).classrooms);
+>>>>>>> 97440a670f4d2046f7aeecc6998908d88878c83c
         
         const title = `${student.name} - du ${student.dStart} au ${student.dEnd} ${student.monthStr} ${student.year}`;
 
@@ -138,7 +141,7 @@ function getRandomCourse(courses, lastCourses, hour) {
     if (hour === 3 || hour === 5) {
         courses = courses.filter(course => course.id != freeCourseId);
     }
-    console.log(courses);
+    
     do {
         randomCourse = courses[Math.floor(Math.random() * courses.length)];
     } while (lastCourses.filter(course => course == randomCourse.id).length == maxConsecutiveHours);
